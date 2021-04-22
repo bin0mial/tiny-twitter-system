@@ -28,7 +28,7 @@ class RegisterController extends Controller
      * @param RegisterRequest $request
      */
     public function register(RegisterRequest $request){
-        $user = $this->registerService->register($request->validated());
+        $user = $this->registerService->register($request);
         return (new RegisterResource($user))->response()->setStatusCode(201);
     }
 }

@@ -14,7 +14,8 @@ class Tweet extends Model
         "tweet"
     ];
 
-    public function user(){
-        $this->belongsTo(User::class);
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
