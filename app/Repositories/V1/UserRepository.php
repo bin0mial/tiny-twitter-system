@@ -26,9 +26,22 @@ class UserRepository
         $this->user = $user;
     }
 
+    public function getById($id): User
+    {
+        return $this->user->find($id);
+    }
+
     public function getByEmail($email): User
     {
         return $this->user->where('email', $email)->first();
+    }
+
+    public function update($data, $id): User
+    {
+        $user = $this->getById($id);
+        $user->attempts = $data["attempts"];
+        $user->update();
+        return $user;
     }
 
     public function save($data): User

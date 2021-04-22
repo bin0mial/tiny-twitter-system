@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Auth\RegisterController;
 use App\Http\Controllers\Api\V1\TweetController;
+use App\Http\Controllers\Api\V1\FollowController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,10 @@ Route::prefix("v1")->group(function () {
     Route::middleware("auth:sanctum")->group(function () {
         Route::prefix("tweets")->group(function () {
             Route::post("", [TweetController::class, "store"]);
+        });
+
+        Route::prefix("follows")->group(function () {
+            Route::post("", [FollowController::class, "store"]);
         });
     });
 
