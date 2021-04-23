@@ -27,6 +27,12 @@ class LoginService
         $this->userRepository = $userRepository;
     }
 
+    /**
+     * Authenticating User
+     * @param $data
+     * @return NewAccessToken
+     * @throws ValidationException
+     */
     public function authenticate($data): NewAccessToken
     {
         // It also scheduled, In case running schedule you can delete this line
@@ -56,6 +62,9 @@ class LoginService
         return $user->createToken($data->device_name);
     }
 
+    /**
+     * Deleting Expired Blocked accounts
+     */
     private function deleteExpiredBans()
     {
         app(BanService::class)->deleteExpiredBans();

@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Auth\RegisterController;
 use App\Http\Controllers\Api\V1\TweetController;
 use App\Http\Controllers\Api\V1\FollowController;
+use App\Http\Controllers\Api\V1\StatisticsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +22,11 @@ Route::prefix("v1")->group(function () {
     Route::post("login", [LoginController::class, "login"]);
     Route::post("register", [RegisterController::class, "register"]);
 
+    // This can go to auth:sanctum group in case access must be by authorized user
+    Route::prefix("statistics")->group(function () {
+        Route::get("", [StatisticsController::class, "index"]);
+    });
+
     Route::middleware("auth:sanctum")->group(function () {
         Route::prefix("tweets")->group(function () {
             Route::post("", [TweetController::class, "store"]);
@@ -29,6 +35,8 @@ Route::prefix("v1")->group(function () {
         Route::prefix("follows")->group(function () {
             Route::post("", [FollowController::class, "store"]);
         });
+
     });
+
 
 });

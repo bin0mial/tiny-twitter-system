@@ -26,6 +26,11 @@ class UserRepository
         $this->user = $user;
     }
 
+    public function getUsersWithCount($data){
+        return $this->user->withCount($data)->get();
+    }
+
+
     public function getById($id): User
     {
         return $this->user->find($id);

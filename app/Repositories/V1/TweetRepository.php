@@ -26,6 +26,10 @@ class TweetRepository
         $this->tweet = $tweet;
     }
 
+    public function countTweets(){
+        return $this->tweet->count();
+    }
+
     public function save($data){
         return $this->tweet->create($data);
     }
