@@ -25,6 +25,11 @@ class FollowService
         $this->userRepository = $userRepository;
     }
 
+    /**
+     * Following User Logic Service
+     * @param $data
+     * @return User
+     */
     public function followUser($data): User
     {
         $user = $data->user();

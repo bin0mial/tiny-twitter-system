@@ -24,6 +24,11 @@ class FollowController extends Controller
         $this->followService = $followService;
     }
 
+    /**
+     * Storing FollowRequest (Following Users)
+     * @param StoreFollowRequest $request
+     * @return \Illuminate\Http\JsonResponse|object
+     */
     public function store(StoreFollowRequest $request)
     {
         $followedUser = $this->followService->followUser($request);

@@ -30,6 +30,10 @@ class StatisticsService
         $this->tweetRepository = $tweetRepository;
     }
 
+    /**
+     * Getting statistics PDF
+     * @return mixed
+     */
     public function getUsersStatisticsPDFData()
     {
         $users = $this->userRepository->getUsersWithCount(["tweets"]);
