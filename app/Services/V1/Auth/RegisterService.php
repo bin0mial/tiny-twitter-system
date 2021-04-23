@@ -27,6 +27,6 @@ class RegisterService
 
     public function register($data): User
     {
-        return $this->userRepository->save($data->validated());
+        return $this->userRepository->save($data);
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\V1\Auth\RegisterController;
 use App\Http\Controllers\Api\V1\TweetController;
 use App\Http\Controllers\Api\V1\FollowController;
 use App\Http\Controllers\Api\V1\StatisticsController;
+use App\Http\Controllers\Api\V1\Auth\LogoutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +22,7 @@ use App\Http\Controllers\Api\V1\StatisticsController;
 Route::prefix("v1")->group(function () {
     Route::post("login", [LoginController::class, "login"]);
     Route::post("register", [RegisterController::class, "register"]);
+    Route::post("logout", [LogoutController::class, "logout"])->middleware("auth:sanctum");
 
     // This can go to auth:sanctum group in case access must be by authorized user
     Route::prefix("statistics")->group(function () {
@@ -37,6 +39,9 @@ Route::prefix("v1")->group(function () {
         });
 
     });
+});
 
-
+Route::fallback(function(){
+    return response()->json([
+        'message' => 'Page Not Found.'], 404);
 });

@@ -23,18 +23,18 @@ class RoutesTest extends TestCase
     }
 
 
-    public function test_get_request_on_login_url_returns_405_method_not_allowed()
+    public function test_get_request_on_login_url_returns_404_not_found()
     {
         $response = $this->get('/api/v1/login');
 
-        $response->assertStatus(405);
+        $response->assertStatus(404);
     }
 
-    public function test_get_request_on_register_url_returns_405_method_not_allowed()
+    public function test_get_request_on_register_url_returns_404_not_found()
     {
         $response = $this->get('/api/v1/register');
 
-        $response->assertStatus(405);
+        $response->assertStatus(404);
     }
 
     public function test_login_on_not_exist_user_will_return_422_unproccesable_data()

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Follow\StoreFollowRequest;
 use App\Http\Resources\V1\UserResource;
+use App\Http\Responses\Response;
 use App\Services\V1\FollowService;
 
 class FollowController extends Controller
@@ -27,12 +28,12 @@ class FollowController extends Controller
     /**
      * Storing FollowRequest (Following Users)
      * @param StoreFollowRequest $request
-     * @return \Illuminate\Http\JsonResponse|object
+     * @return \App\Http\Responses\Response
      */
-    public function store(StoreFollowRequest $request)
+    public function store(StoreFollowRequest $request): Response
     {
-        $followedUser = $this->followService->followUser($request);
-        return (new UserResource($followedUser))->response()->setStatusCode(200);
+        $followedUser = $this->followService->followUser($request->validated(), $request->user()->id);
+        return new Response(new UserResource($followedUser),201);
     }
 
 }

@@ -30,10 +30,10 @@ class FollowService
      * @param $data
      * @return User
      */
-    public function followUser($data): User
+    public function followUser($data, $id): User
     {
-        $user = $data->user();
-        $userToBeFollowed = $this->userRepository->getById($data->validated()['id']);
+        $user = $this->userRepository->getById($id);
+        $userToBeFollowed = $this->userRepository->getById($data['id']);
         if(!$user->isFollowing($userToBeFollowed)){
             $user->follow($userToBeFollowed);
         }

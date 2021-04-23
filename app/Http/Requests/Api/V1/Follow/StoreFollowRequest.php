@@ -14,7 +14,7 @@ class StoreFollowRequest extends FormRequest
     public function rules()
     {
         return [
-            "id" => ["required", "exists:users", "not_in:".$this->user()->id]
+            "id" => ["required", "integer", "exists:users", "not_in:".$this->user()->id]
         ];
     }
 }

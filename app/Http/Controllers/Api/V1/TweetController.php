@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Tweet\StoreTweetRequest;
 use App\Http\Resources\V1\TweetResource;
+use App\Http\Responses\Response;
 use App\Services\V1\TweetService;
 
 class TweetController extends Controller
@@ -28,12 +29,12 @@ class TweetController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StoreTweetRequest $request
-     * @return \Illuminate\Http\JsonResponse|object
+     * @return \App\Http\Responses\Response
      */
-    public function store(StoreTweetRequest $request)
+    public function store(StoreTweetRequest $request): Response
     {
-        $tweet = $this->tweetService->saveTweetData($request);
-        return (new TweetResource($tweet))->response()->setStatusCode(201);
+        $tweet = $this->tweetService->saveTweetData($request->validated(), $request->user()->id);
+        return new Response(new TweetResource($tweet), 201);
     }
 
 }

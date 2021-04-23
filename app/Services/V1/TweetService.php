@@ -29,10 +29,10 @@ class TweetService
      * @param $data
      * @return mixed
      */
-    public function saveTweetData($data)
+    public function saveTweetData($data, $id)
     {
-        $tweetData = $data->validated();
-        $tweetData["user_id"] = $data->user()->id;
+        $tweetData = $data;
+        $tweetData["user_id"] = $id;
         return $this->tweetRepository->save($tweetData);
     }
 }

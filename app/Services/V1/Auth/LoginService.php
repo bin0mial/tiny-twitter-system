@@ -38,7 +38,7 @@ class LoginService
         // It also scheduled, In case running schedule you can delete this line
         $this->deleteExpiredBans();
 
-        $user = $this->userRepository->getByEmail($data->email);
+        $user = $this->userRepository->getByEmail($data["email"]);
 
         if ($user->isBanned()) {
             $user->attempts = 0;
@@ -49,7 +49,7 @@ class LoginService
             ]);
         }
 
-        if (!Hash::check($data->password, $user->password)) {
+        if (!Hash::check($data["password"], $user->password)) {
             if ($user->attempts++ >= 4) {
                 $user->ban(["expired_at" => "+30 minute"]);
             }
@@ -59,7 +59,7 @@ class LoginService
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
-        return $user->createToken($data->device_name);
+        return $user->createToken($data["device_name"]);
     }
 
     /**
