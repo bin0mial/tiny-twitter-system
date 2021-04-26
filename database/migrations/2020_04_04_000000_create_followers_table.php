@@ -13,18 +13,17 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserFollowerTable extends Migration
+class CreateFollowersTable extends Migration
 {
     /**
      * Run the migrations.
      */
     public function up()
     {
-        Schema::create(config('follow.relation_table', 'user_follower'), function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedBigInteger('following_id')->index();
-            $table->unsignedBigInteger('follower_id')->index();
-            $table->timestamp('accepted_at')->nullable()->index();
+        Schema::create('followers', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('follower_id')->constrained()->onUpdate('CASCADE')->onDelete('CASCADE');
+            $table->foreignId('following_id')->constrained("users")->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->timestamps();
         });
     }
@@ -34,6 +33,6 @@ class CreateUserFollowerTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(config('follow.relation_table', 'user_follower'));
+        Schema::dropIfExists("followers");
     }
 }

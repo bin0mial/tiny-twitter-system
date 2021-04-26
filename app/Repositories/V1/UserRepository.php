@@ -41,11 +41,26 @@ class UserRepository
         return $this->user->where('email', $email)->first();
     }
 
+    public function findFollower($id, $follower_id)
+    {
+        return $this->getById($id)->followers()->find($follower_id);
+    }
+
+    public function findFollowing($id, $following_id)
+    {
+        return $this->getById($id)->following()->find($following_id);
+    }
+
+    public function follow($id, $following_id): void
+    {
+        $this->getById($id)->following()->attach($following_id);
+    }
+
     public function update($data, $id): User
     {
+        unset($data['image']);
         $user = $this->getById($id);
-        $user->attempts = $data["attempts"];
-        $user->update();
+        $user->update($data);
         return $user;
     }
 

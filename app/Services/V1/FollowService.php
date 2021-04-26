@@ -11,9 +11,10 @@ class FollowService
     /**
      * Variable to hold injected dependency
      *
-     * @var $userRepository
+     * @var UserRepository
      */
     protected $userRepository;
+
 
     /**
      * Initializing the instances and variables
@@ -28,14 +29,14 @@ class FollowService
     /**
      * Following User Logic Service
      * @param $data
+     * @param $id
      * @return User
      */
     public function followUser($data, $id): User
     {
-        $user = $this->userRepository->getById($id);
         $userToBeFollowed = $this->userRepository->getById($data['id']);
-        if(!$user->isFollowing($userToBeFollowed)){
-            $user->follow($userToBeFollowed);
+        if ($userToBeFollowed && !$this->userRepository->findFollowing($id, $userToBeFollowed->id)) {
+            $this->userRepository->follow($id, $userToBeFollowed->id);
         }
         return $userToBeFollowed;
     }

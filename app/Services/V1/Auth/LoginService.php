@@ -3,13 +3,15 @@
 namespace App\Services\V1\Auth;
 
 use App\Repositories\V1\UserRepository;
-use Cog\Contracts\Ban\BanService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Laravel\Sanctum\NewAccessToken;
 
 class LoginService
 {
+    private $maxFailAttempts = 5;
+    private $blockedForMinutes = 30;
+
     /**
      * Variable to hold injected dependency
      *
@@ -35,11 +37,21 @@ class LoginService
      */
     public function authenticate($data): NewAccessToken
     {
-        // It also scheduled, In case running schedule you can delete this line
-        $this->deleteExpiredBans();
-
         $user = $this->userRepository->getByEmail($data["email"]);
 
+        $this->throttle($user);
+
+        $this->validateCredentials($user, $data["password"]);
+
+        return $user->createToken($data["device_name"]);
+    }
+
+
+    /**
+     * @throws ValidationException
+     */
+    private function throttle($user): void
+    {
         if ($user->isBanned()) {
             $user->attempts = 0;
             $this->userRepository->update($user->toArray(), $user->id);
@@ -48,10 +60,21 @@ class LoginService
                 'email' => ["Your account have been locked for 30 minutes due to incorrect attempts"],
             ]);
         }
+    }
 
-        if (!Hash::check($data["password"], $user->password)) {
-            if ($user->attempts++ >= 4) {
-                $user->ban(["expired_at" => "+30 minute"]);
+    /**
+     * @throws ValidationException
+     */
+    private function validateCredentials($user, $password): void
+    {
+
+        if (!Hash::check($password, $user->password)) {
+            $user->banned_at = null;
+            $user->ban_expire_at = null;
+
+            if ($user->attempts++ >= $this->maxFailAttempts - 1) {
+                $user->banned_at = now();
+                $user->ban_expire_at = now()->addMinutes($this->blockedForMinutes);
             }
             $this->userRepository->update($user->toArray(), $user->id);
 
@@ -59,14 +82,5 @@ class LoginService
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
-        return $user->createToken($data["device_name"]);
-    }
-
-    /**
-     * Deleting Expired Blocked accounts
-     */
-    private function deleteExpiredBans()
-    {
-        app(BanService::class)->deleteExpiredBans();
     }
 }

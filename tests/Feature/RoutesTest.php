@@ -10,6 +10,7 @@ class RoutesTest extends TestCase
 {
     use RefreshDatabase;
 
+
     /**
      * A basic feature test example.
      *
@@ -39,6 +40,18 @@ class RoutesTest extends TestCase
 
     public function test_login_on_not_exist_user_will_return_422_unproccesable_data()
     {
+        $response = $this->post(
+            '/api/v1/login',
+            ["email" => "test@gmail.com", "password" => "123", "device_name" => "test"],
+            ["Accept" => "application/json"]
+        );
+
+        $response->assertStatus(422);
+    }
+
+    public function test_login_with_wrong_password_user_will_return_422_unproccesable_data()
+    {
+
         $response = $this->post(
             '/api/v1/login',
             ["email" => "test@gmail.com", "password" => "123", "device_name" => "test"],

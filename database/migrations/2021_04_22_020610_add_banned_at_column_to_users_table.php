@@ -15,6 +15,7 @@ class AddBannedAtColumnToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->timestamp('banned_at')->nullable();
+            $table->timestamp('ban_expire_at')->nullable();
         });
     }
 
@@ -27,6 +28,7 @@ class AddBannedAtColumnToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('banned_at');
+            $table->dropColumn('ban_expire_at');
         });
     }
 }

@@ -2,20 +2,19 @@
 
 namespace App\Models;
 
-use Cog\Contracts\Ban\Bannable as BannableContract;
-use Cog\Laravel\Ban\Traits\Bannable;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
-use Overtrue\LaravelFollow\Followable;
 
-class User extends Authenticatable implements BannableContract
+class User extends Authenticatable
 {
-    use HasApiTokens, Followable, Bannable, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -28,6 +27,9 @@ class User extends Authenticatable implements BannableContract
         'password',
         'date_of_birth',
         'image',
+        'banned_at',
+        'ban_expire_at',
+        'attempts'
     ];
 
     /**
@@ -54,6 +56,18 @@ class User extends Authenticatable implements BannableContract
         return $this->hasMany(Tweet::class);
     }
 
+    public function following(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, "followers", 'follower_id', 'following_id')
+            ->withTimestamps();
+    }
+
+    public function followers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, "followers", 'following_id', 'follower_id')
+            ->withTimestamps();
+    }
+
     public function setPasswordAttribute($value)
     {
         $this->attributes["password"] = Hash::make($value);
@@ -69,4 +83,12 @@ class User extends Authenticatable implements BannableContract
         $path = $value ? $value->storePublicly("public/avatars") : null;
         $this->attributes['image'] = $path;
     }
+
+    public function isBanned(): bool
+    {
+        $expired_at = Carbon::parse($this->attributes['ban_expire_at']);
+        return $expired_at->greaterThanOrEqualTo(now());
+    }
+
+
 }

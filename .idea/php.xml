@@ -107,8 +107,6 @@
       <path value="$PROJECT_DIR$/vendor/symfony/var-dumper" />
       <path value="$PROJECT_DIR$/vendor/sebastian/resource-operations" />
       <path value="$PROJECT_DIR$/vendor/sebastian/code-unit" />
-      <path value="$PROJECT_DIR$/vendor/overtrue/laravel-follow" />
-      <path value="$PROJECT_DIR$/vendor/cybercog/laravel-ban" />
       <path value="$PROJECT_DIR$/vendor/laravel/sanctum" />
       <path value="$PROJECT_DIR$/vendor/dompdf/dompdf" />
       <path value="$PROJECT_DIR$/vendor/sabberworm/php-css-parser" />

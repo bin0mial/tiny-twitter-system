@@ -165,7 +165,6 @@ return [
         /*
          * Package Service Providers...
          */
-        Cog\Laravel\Ban\Providers\BanServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
 
         /*
